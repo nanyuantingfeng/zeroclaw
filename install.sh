@@ -1435,8 +1435,9 @@ if [[ "$SKIP_ONBOARD" == false && -n "$ZEROCLAW_BIN" ]]; then
     else
       step_fail "Provider configuration failed — run zeroclaw onboard --tui to retry"
     fi
-  elif [[ -t 0 && -t 1 ]]; then
-    # Interactive terminal: launch TUI onboarding wizard
+  elif [[ -t 1 ]] && [[ -t 0 || -e /dev/tty ]]; then
+    # Interactive terminal: launch TUI onboarding wizard.
+    # The TUI binary handles /dev/tty reopening internally when stdin is a pipe.
     echo
     step_dot "Launching TUI onboarding wizard"
     "$ZEROCLAW_BIN" onboard --tui || warn "TUI setup exited — run zeroclaw onboard --tui to retry"
